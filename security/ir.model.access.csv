@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_alldons_resv,access.alldons.resv,model_alldons_resv,alldons.group_reservation_user,1,1,1,1

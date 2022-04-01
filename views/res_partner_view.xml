@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+      <record model="ir.ui.view" id="res_partner_reservation">
+          <field name="name">res_partner_reservation</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="base.view_partner_form"/>
+          <field name="arch" type="xml">
+             <xpath expr="//form//sheet//notebook//page[@name='contact_addresses']" position="before">
+                 <page string="list of reservation">
+                     <field name="reservation_ids"/>
+                 </page>
+             </xpath>
+
+          </field>
+      </record>
+
+
+
+
+  </data>
+</odoo>

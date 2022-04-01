@@ -1,0 +1,296 @@
+<odoo>
+  <data>
+
+
+
+
+
+
+ <!--kanban view-->
+   <record id="reservation_view_kanban" model="ir.ui.view">
+            <field name="name">reservation.kanban</field>
+            <field name="model">alldons.resv</field>
+
+            <field name="arch" type="xml">
+                <kanban >
+                   <field name="ref"/>
+                   <field name="titre"/>
+                   <field name="description"/>
+                   <field name ="date_res"/>
+                   <field name="duree_resv_month"/>
+                   <field name ="duree_resv_day"/>
+                   <field name ="duree_resv_hour"/>
+                   <field name ="fin_reservation"/>
+                   <field name ="client_id"/>
+                   <field name ="devis"/>
+                   <field name="state"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <ul>
+                                        <li>
+                                           Reference: <field name="ref"/>
+                                        </li>
+                                        <li>
+                                            title: <field name="titre"/>
+                                        </li>
+                                        <li>
+                                            date of reservation : <field name="date_res"/>
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    <!-- explicit list view definition -->
+
+   <record model="ir.ui.view" id="reservation_view_list">
+      <field name="name">Reservation list</field>
+      <field name="model">alldons.resv</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="ref"/>
+          <field name="titre"/>
+          <field name="description"/>
+          <field name ="date_res"/>
+          <field name="duree_resv_month"/>
+          <field name ="duree_resv_day"/>
+          <field name ="duree_resv_hour"/>
+          <field name ="fin_reservation"/>
+          <field name ="client_id"/>
+          <field name ="article_ids"/>
+          <field name ="devis"/>
+          <field name="state"/>
+
+        </tree>
+      </field>
+    </record>
+
+
+
+
+       <!-- explicit form view definition -->
+
+  <record model="ir.ui.view" id="reservation_view_form">
+      <field name="name">Reservation form</field>
+      <field name="model">alldons.resv</field>
+      <field name="arch" type="xml">
+        <form>
+            <header>
+                <field name="state" widget="statusbar" nolabel="1"  >
+
+                </field>
+                <button id="button_confirm" name="action_confirm" type="object" class="oe_highlight" string="confirm" states='l1'/>
+                <button id="button_done"  name="action_done" type="object" class="oe_highlight" string="Mark as done" states='l2'/>
+                <button id="button_new"  name="action_new" type="object" class="oe_highlight" string="Set to New" states='l3,l2,l4' />
+                <button id="button_cancel" name="action_cancel" type="object" class="oe_highlight" string="cancel" states='l3'/>
+                <button id="button_devis"  name="action_quotation"  type="object" class="oe_highlight" string="create quotation" states='l3'/>
+
+            </header>
+            <sheet>
+                <div class="oe_title">
+                    <h1>
+                        <field name="ref" readonly="1" />
+                    </h1>
+                </div>
+                <group>
+                <field name="ref"/>
+                <field name="titre" required='True' />
+                <field name="description"/>
+                <field name ="date_res"/>
+                <field name="duree_resv_month"/>
+                <field name ="duree_resv_day"/>
+                <field name ="duree_resv_hour"/>
+                <field name ="fin_reservation"/>
+                <field name ="devis"/>
+                <field name="client_id"/>
+               </group>
+                <notebook>
+                    <page string="list of article">
+                        <field name ="article_ids"/>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+
+      </field>
+    </record>
+
+
+
+    <!-- search -->
+  <record id="reservation_search" model="ir.ui.view">
+        <field name="name">alldons.resv.search</field>
+        <field name="model">alldons.resv</field>
+        <field name="arch" type="xml">
+            <search string="Assets">
+                <field name="ref"/>
+                <field name="titre" required='True' />
+                <field name="description"/>
+                <field name ="date_res"/>
+
+                <field name="duree_resv_month"/>
+                <field name ="duree_resv_day"/>
+                <field name ="duree_resv_hour"/>
+                <field name ="fin_reservation"/>
+                <field name="client_id"/>
+                <field name ="article_ids"/>
+                <separator/>
+                <filter name="new" string="New" domain="[('state', '=', 'l1')]"/>
+                <filter name="confirm" string="Confirm" domain="[('state', '=', 'l2')]"/>
+                <filter name="done" string="done" domain="[('state', '=', 'l3')]"/>
+                <filter name="cancel" string="cancel" domain="[('state', '=', 'l4')]"/>
+                <group expand="0" string="Group By">
+                        <filter string="client" name="client"  context="{'group_by':'client_id'}"/>
+                        <filter string="date reservation" name="date_reservation"  context="{'group_by':'date_res'}"/>
+                        <filter string="article" name="article"  context="{'group_by':'article_ids'}"/>
+                    </group>
+            </search>
+        </field>
+    </record>
+
+     <!--pivot view -->
+
+
+  <record id="appointment_pivot" model="ir.ui.view">
+      <field name="name">reservation.pivot</field>
+      <field name="model">alldons.resv</field>
+      <field name="arch" type="xml">
+          <pivot string="number reservation in month">
+              <field name="client_id" type="row"/>
+              <field name="date_res" type="col" interval="month"/>
+              <field name="nbr_hour"/>
+
+          </pivot>
+      </field>
+  </record>
+
+  <record id="appointment_pivot" model="ir.ui.view">
+      <field name="name">reservation.pivot</field>
+      <field name="model">alldons.resv</field>
+      <field name="arch" type="xml">
+          <graph string="number hour in month">
+              <field name="client_id" type="row"/>
+              <field name="date_res" type="col" interval="month"/>
+          </graph>
+      </field>
+  </record>
+
+      <!-- graph view -->
+
+
+
+
+    <!-- actions all reservation -->
+
+  <record model="ir.actions.act_window" id="reservation1_action_window">
+      <field name="name">reservation window</field>
+      <field name="res_model">alldons.resv</field>
+      <field name="view_mode">tree,form,kanban</field>
+
+  </record>
+    <!--action my reservation-->
+  <record model="ir.actions.act_window" id="reservation2_action_window">
+      <field name="name">reservation window</field>
+      <field name="res_model">alldons.resv</field>
+      <field name="view_mode">tree,form,kanban,pivot,graph</field>
+      <field name="domain">[('client_id.user_ids','=',uid)]</field>
+    </record>
+
+    <!--action sale-->
+  <record model="ir.actions.act_window" id="analyse2_action_window">
+      <field name="name">sale window</field>
+      <field name="res_model">sale.order</field>
+      <field name="view_mode">tree,form,kanban</field>
+
+      <field name="domain">[("create_after_resv","=",True)]</field>
+
+
+
+
+    </record>
+
+
+    <!--action client-->
+  <record model="ir.actions.act_window" id="analyse1_action_window">
+      <field name="name">client window</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">tree,form,kanban</field>
+
+      <field name="domain">[("reservation_ids.state","in",["l1","l2","l3"] )]</field>
+
+
+
+
+    </record>
+  <!--action quotation-->
+   <record id="action_create_quotation" model="ir.actions.server">
+        <field name="name">Create Quotation</field>
+        <field name="model_id" ref="model_alldons_resv"/>
+        <field name="binding_model_id" ref="model_alldons_resv"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_quotation()
+        </field>
+    </record>
+
+  <!--action pivot-->
+   <record model="ir.actions.act_window" id="reservation3_action_window">
+      <field name="name">reservation window</field>
+      <field name="res_model">alldons.resv</field>
+      <field name="view_mode">tree,form,kanban,pivot,graph</field>
+      <field name="domain">[('state','=','l4'),('client_id','=',uid)]</field>
+    </record>
+
+
+
+
+
+
+
+    <!-- Top menu item -->
+
+  <menuitem name="Reservation" id="Reservation_menu_root"/>
+
+    <!-- menu categories -->
+
+  <menuitem name="Reservation" id="res1_menu_1" parent="Reservation_menu_root"/>
+  <menuitem name="Analyse" id="analyse_menu_1" parent="Reservation_menu_root"/>
+  <menuitem name="Reporting" id="reporting_menu"  parent="Reservation_menu_root" />
+
+
+    <!-- actions reservation -->
+
+   <menuitem name="All reservation " id="res1_menu_1_list" parent="res1_menu_1"
+              action="reservation1_action_window" />
+
+   <menuitem name="My reservation " id="res2_menu_2_list" parent="res1_menu_1"
+              action="reservation2_action_window"/>
+
+    <!-- actions analyse -->
+   <menuitem name="Client" id="analyse_menu_1_list" parent="analyse_menu_1"
+              action="analyse1_action_window"/>
+   <menuitem name="Sale" id="analyse_menu_2_list" parent="analyse_menu_1"
+              action="analyse2_action_window"/>
+
+
+     <!-- actions reporting -->
+   <menuitem name="number of my reservation in month" id="reporting_menu_1_list" parent="reporting_menu"
+              action="reservation2_action_window"/>
+
+   <menuitem name="number of my cancel reservation in month" id="reporting_menu_2_list" parent="reporting_menu"
+              action="reservation3_action_window"/>
+   <menuitem name="number hour reservation in month" id="reporting_menu_3_list" parent="reporting_menu"
+              action="reservation2_action_window"/>
+
+  </data>
+</odoo>
